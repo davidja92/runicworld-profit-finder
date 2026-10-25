@@ -1,0 +1,1297 @@
+{
+  "snapshot_market_items": 338,
+  "catalogue_methods": 213,
+  "snapshot_incomplete_methods": 170,
+  "snapshot_complete_methods": 43,
+  "unresolved_distinct_items": 203,
+  "top_missing": [
+    [
+      "Rune Essence (input)",
+      6
+    ],
+    [
+      "Bronze Bar (input)",
+      5
+    ],
+    [
+      "Mithril Bar (input)",
+      5
+    ],
+    [
+      "Leather (input)",
+      4
+    ],
+    [
+      "Unpowered Orb (input)",
+      4
+    ],
+    [
+      "Sapphire (input)",
+      3
+    ],
+    [
+      "Emerald (input)",
+      3
+    ],
+    [
+      "Ruby (input)",
+      3
+    ],
+    [
+      "Lava Scale",
+      2
+    ],
+    [
+      "Adamantite Ore",
+      2
+    ],
+    [
+      "Raw Lobster",
+      2
+    ],
+    [
+      "Raw Swordfish",
+      2
+    ],
+    [
+      "Silver Ore",
+      2
+    ],
+    [
+      "Yew Logs (input)",
+      2
+    ],
+    [
+      "Snapdragon",
+      2
+    ],
+    [
+      "Grimy Irit Leaf",
+      1
+    ],
+    [
+      "Grimy Avantoe",
+      1
+    ],
+    [
+      "Grimy Kwuarm",
+      1
+    ],
+    [
+      "Grimy Harralander",
+      1
+    ],
+    [
+      "Grimy Guam Leaf",
+      1
+    ],
+    [
+      "Lava Dragon Bones",
+      1
+    ],
+    [
+      "Red Spiders' Eggs",
+      1
+    ],
+    [
+      "Yew Logs",
+      1
+    ],
+    [
+      "Copper Ore",
+      1
+    ],
+    [
+      "Tin Ore",
+      1
+    ],
+    [
+      "Runite Ore",
+      1
+    ],
+    [
+      "Bronze Bar",
+      1
+    ],
+    [
+      "Tin Ore (input)",
+      1
+    ],
+    [
+      "Silver Bar",
+      1
+    ],
+    [
+      "Mithril Bar",
+      1
+    ],
+    [
+      "Adamantite Bar",
+      1
+    ],
+    [
+      "Runite Ore (input)",
+      1
+    ],
+    [
+      "Bronze Dagger",
+      1
+    ],
+    [
+      "Bronze Sword",
+      1
+    ],
+    [
+      "Bronze Platelegs",
+      1
+    ],
+    [
+      "Bronze Platebody",
+      1
+    ],
+    [
+      "Iron Dagger",
+      1
+    ],
+    [
+      "Iron Sword",
+      1
+    ],
+    [
+      "Iron Platebody",
+      1
+    ],
+    [
+      "Steel Dagger",
+      1
+    ],
+    [
+      "Steel Sword",
+      1
+    ],
+    [
+      "Steel Platebody",
+      1
+    ],
+    [
+      "Mithril Dagger",
+      1
+    ],
+    [
+      "Mithril Sword",
+      1
+    ],
+    [
+      "Mithril Scimitar",
+      1
+    ],
+    [
+      "Mithril Platelegs",
+      1
+    ],
+    [
+      "Adamant Dagger",
+      1
+    ],
+    [
+      "Adamant Sword",
+      1
+    ],
+    [
+      "Rune Dagger",
+      1
+    ],
+    [
+      "Rune Sword",
+      1
+    ]
+  ],
+  "affected_methods": [
+    {
+      "method": "Chaos druids (Taverley)",
+      "missing": [
+        "Grimy Irit Leaf",
+        "Grimy Avantoe",
+        "Grimy Kwuarm",
+        "Grimy Harralander",
+        "Grimy Guam Leaf"
+      ]
+    },
+    {
+      "method": "Lava dragons (keep/bury bones)",
+      "missing": [
+        "Lava Scale"
+      ]
+    },
+    {
+      "method": "Lava dragons (sell bones)",
+      "missing": [
+        "Lava Scale",
+        "Lava Dragon Bones"
+      ]
+    },
+    {
+      "method": "Mine adamantite",
+      "missing": [
+        "Adamantite Ore"
+      ]
+    },
+    {
+      "method": "Pick up red spiders eggs",
+      "missing": [
+        "Red Spiders' Eggs"
+      ]
+    },
+    {
+      "method": "Chop yew logs",
+      "missing": [
+        "Yew Logs"
+      ]
+    },
+    {
+      "method": "Fish raw lobsters",
+      "missing": [
+        "Raw Lobster"
+      ]
+    },
+    {
+      "method": "Fish raw swordfish",
+      "missing": [
+        "Raw Swordfish"
+      ]
+    },
+    {
+      "method": "Mine Copper Ore",
+      "missing": [
+        "Copper Ore"
+      ]
+    },
+    {
+      "method": "Mine Tin Ore",
+      "missing": [
+        "Tin Ore"
+      ]
+    },
+    {
+      "method": "Mine Silver Ore",
+      "missing": [
+        "Silver Ore"
+      ]
+    },
+    {
+      "method": "Mine Adamantite Ore",
+      "missing": [
+        "Adamantite Ore"
+      ]
+    },
+    {
+      "method": "Mine Runite Ore",
+      "missing": [
+        "Runite Ore"
+      ]
+    },
+    {
+      "method": "Smelt Bronze Bar",
+      "missing": [
+        "Bronze Bar",
+        "Tin Ore (input)"
+      ]
+    },
+    {
+      "method": "Smelt Silver Bar",
+      "missing": [
+        "Silver Bar"
+      ]
+    },
+    {
+      "method": "Smelt Mithril Bar",
+      "missing": [
+        "Mithril Bar"
+      ]
+    },
+    {
+      "method": "Smelt Adamantite Bar",
+      "missing": [
+        "Adamantite Bar"
+      ]
+    },
+    {
+      "method": "Smelt Runite Bar",
+      "missing": [
+        "Runite Ore (input)"
+      ]
+    },
+    {
+      "method": "Smith Bronze Dagger",
+      "missing": [
+        "Bronze Dagger",
+        "Bronze Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Bronze Sword",
+      "missing": [
+        "Bronze Sword",
+        "Bronze Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Bronze Scimitar",
+      "missing": [
+        "Bronze Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Bronze Platelegs",
+      "missing": [
+        "Bronze Platelegs",
+        "Bronze Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Bronze Platebody",
+      "missing": [
+        "Bronze Platebody",
+        "Bronze Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Iron Dagger",
+      "missing": [
+        "Iron Dagger"
+      ]
+    },
+    {
+      "method": "Smith Iron Sword",
+      "missing": [
+        "Iron Sword"
+      ]
+    },
+    {
+      "method": "Smith Iron Platebody",
+      "missing": [
+        "Iron Platebody"
+      ]
+    },
+    {
+      "method": "Smith Steel Dagger",
+      "missing": [
+        "Steel Dagger"
+      ]
+    },
+    {
+      "method": "Smith Steel Sword",
+      "missing": [
+        "Steel Sword"
+      ]
+    },
+    {
+      "method": "Smith Steel Platebody",
+      "missing": [
+        "Steel Platebody"
+      ]
+    },
+    {
+      "method": "Smith Mithril Dagger",
+      "missing": [
+        "Mithril Dagger",
+        "Mithril Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Mithril Sword",
+      "missing": [
+        "Mithril Sword",
+        "Mithril Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Mithril Scimitar",
+      "missing": [
+        "Mithril Scimitar",
+        "Mithril Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Mithril Platelegs",
+      "missing": [
+        "Mithril Platelegs",
+        "Mithril Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Mithril Platebody",
+      "missing": [
+        "Mithril Bar (input)"
+      ]
+    },
+    {
+      "method": "Smith Adamant Dagger",
+      "missing": [
+        "Adamant Dagger"
+      ]
+    },
+    {
+      "method": "Smith Adamant Sword",
+      "missing": [
+        "Adamant Sword"
+      ]
+    },
+    {
+      "method": "Smith Rune Dagger",
+      "missing": [
+        "Rune Dagger"
+      ]
+    },
+    {
+      "method": "Smith Rune Sword",
+      "missing": [
+        "Rune Sword"
+      ]
+    },
+    {
+      "method": "Cook Shrimps",
+      "missing": [
+        "Shrimps",
+        "Raw Shrimps (input)"
+      ]
+    },
+    {
+      "method": "Cook Anchovies",
+      "missing": [
+        "Anchovies",
+        "Raw Anchovies (input)"
+      ]
+    },
+    {
+      "method": "Cook Sardine",
+      "missing": [
+        "Sardine",
+        "Raw Sardine (input)"
+      ]
+    },
+    {
+      "method": "Cook Herring",
+      "missing": [
+        "Herring",
+        "Raw Herring (input)"
+      ]
+    },
+    {
+      "method": "Cook Trout",
+      "missing": [
+        "Raw Trout (input)"
+      ]
+    },
+    {
+      "method": "Cook Pike",
+      "missing": [
+        "Pike",
+        "Raw Pike (input)"
+      ]
+    },
+    {
+      "method": "Cook Salmon",
+      "missing": [
+        "Salmon",
+        "Raw Salmon (input)"
+      ]
+    },
+    {
+      "method": "Cook Tuna",
+      "missing": [
+        "Raw Tuna (input)"
+      ]
+    },
+    {
+      "method": "Cook Swordfish",
+      "missing": [
+        "Raw Swordfish (input)"
+      ]
+    },
+    {
+      "method": "Cook Monkfish",
+      "missing": [
+        "Raw Monkfish (input)"
+      ]
+    },
+    {
+      "method": "Fish Shrimps",
+      "missing": [
+        "Raw Shrimps"
+      ]
+    },
+    {
+      "method": "Fish Anchovies",
+      "missing": [
+        "Raw Anchovies"
+      ]
+    },
+    {
+      "method": "Fish Trout",
+      "missing": [
+        "Raw Trout"
+      ]
+    },
+    {
+      "method": "Fish Salmon",
+      "missing": [
+        "Raw Salmon"
+      ]
+    },
+    {
+      "method": "Fish Tuna",
+      "missing": [
+        "Raw Tuna"
+      ]
+    },
+    {
+      "method": "Fish Lobster",
+      "missing": [
+        "Raw Lobster"
+      ]
+    },
+    {
+      "method": "Fish Swordfish",
+      "missing": [
+        "Raw Swordfish"
+      ]
+    },
+    {
+      "method": "Fish Monkfish",
+      "missing": [
+        "Raw Monkfish"
+      ]
+    },
+    {
+      "method": "Craft Air Rune",
+      "missing": [
+        "Rune Essence (input)"
+      ]
+    },
+    {
+      "method": "Craft Mind Rune",
+      "missing": [
+        "Rune Essence (input)"
+      ]
+    },
+    {
+      "method": "Craft Water Rune",
+      "missing": [
+        "Water Rune",
+        "Rune Essence (input)"
+      ]
+    },
+    {
+      "method": "Craft Earth Rune",
+      "missing": [
+        "Earth Rune",
+        "Rune Essence (input)"
+      ]
+    },
+    {
+      "method": "Craft Fire Rune",
+      "missing": [
+        "Fire Rune",
+        "Rune Essence (input)"
+      ]
+    },
+    {
+      "method": "Craft Body Rune",
+      "missing": [
+        "Body Rune",
+        "Rune Essence (input)"
+      ]
+    },
+    {
+      "method": "Craft Chaos Rune",
+      "missing": [
+        "Chaos Rune"
+      ]
+    },
+    {
+      "method": "Craft Death Rune",
+      "missing": [
+        "Death Rune"
+      ]
+    },
+    {
+      "method": "Craft Gold Ring",
+      "missing": [
+        "Gold Ring"
+      ]
+    },
+    {
+      "method": "Craft Gold Amulet (u)",
+      "missing": [
+        "Gold Amulet (u)"
+      ]
+    },
+    {
+      "method": "Craft Sapphire Ring",
+      "missing": [
+        "Sapphire Ring",
+        "Sapphire (input)"
+      ]
+    },
+    {
+      "method": "Craft Sapphire Necklace",
+      "missing": [
+        "Sapphire (input)"
+      ]
+    },
+    {
+      "method": "Craft Sapphire Amulet (u)",
+      "missing": [
+        "Sapphire Amulet (u)",
+        "Sapphire (input)"
+      ]
+    },
+    {
+      "method": "Craft Emerald Ring",
+      "missing": [
+        "Emerald Ring",
+        "Emerald (input)"
+      ]
+    },
+    {
+      "method": "Craft Emerald Necklace",
+      "missing": [
+        "Emerald Necklace",
+        "Emerald (input)"
+      ]
+    },
+    {
+      "method": "Craft Emerald Amulet (u)",
+      "missing": [
+        "Emerald Amulet (u)",
+        "Emerald (input)"
+      ]
+    },
+    {
+      "method": "Craft Ruby Ring",
+      "missing": [
+        "Ruby Ring",
+        "Ruby (input)"
+      ]
+    },
+    {
+      "method": "Craft Ruby Necklace",
+      "missing": [
+        "Ruby Necklace",
+        "Ruby (input)"
+      ]
+    },
+    {
+      "method": "Craft Ruby Amulet (u)",
+      "missing": [
+        "Ruby Amulet (u)",
+        "Ruby (input)"
+      ]
+    },
+    {
+      "method": "Craft Diamond Ring",
+      "missing": [
+        "Diamond Ring"
+      ]
+    },
+    {
+      "method": "Craft Diamond Necklace",
+      "missing": [
+        "Diamond Necklace"
+      ]
+    },
+    {
+      "method": "Craft Diamond Amulet (u)",
+      "missing": [
+        "Diamond Amulet (u)"
+      ]
+    },
+    {
+      "method": "Craft Dragonstone Ring",
+      "missing": [
+        "Dragonstone Ring"
+      ]
+    },
+    {
+      "method": "Craft Dragonstone Necklace",
+      "missing": [
+        "Dragonstone Necklace"
+      ]
+    },
+    {
+      "method": "Craft Dragonstone Amulet (u)",
+      "missing": [
+        "Dragonstone Amulet (u)"
+      ]
+    },
+    {
+      "method": "Craft Leather Gloves",
+      "missing": [
+        "Leather (input)"
+      ]
+    },
+    {
+      "method": "Craft Leather Boots",
+      "missing": [
+        "Leather (input)"
+      ]
+    },
+    {
+      "method": "Craft Leather Cowl",
+      "missing": [
+        "Leather (input)"
+      ]
+    },
+    {
+      "method": "Craft Leather Body",
+      "missing": [
+        "Leather (input)"
+      ]
+    },
+    {
+      "method": "Craft Hardleather Body",
+      "missing": [
+        "Hardleather Body"
+      ]
+    },
+    {
+      "method": "Craft Green Dragonhide Body",
+      "missing": [
+        "Green Dragonhide Body",
+        "Green Dragon Leather (input)"
+      ]
+    },
+    {
+      "method": "Craft Blue Dragonhide Body",
+      "missing": [
+        "Blue Dragonhide Body"
+      ]
+    },
+    {
+      "method": "Craft Red Dragonhide Body",
+      "missing": [
+        "Red Dragonhide Body",
+        "Red Dragon Leather (input)"
+      ]
+    },
+    {
+      "method": "Craft Black Dragonhide Body",
+      "missing": [
+        "Black Dragonhide Body",
+        "Black Dragon Leather (input)"
+      ]
+    },
+    {
+      "method": "Cut Opal",
+      "missing": [
+        "Opal"
+      ]
+    },
+    {
+      "method": "Cut Jade",
+      "missing": [
+        "Jade",
+        "Uncut Jade (input)"
+      ]
+    },
+    {
+      "method": "Cut Red Topaz",
+      "missing": [
+        "Red Topaz",
+        "Uncut Red Topaz (input)"
+      ]
+    },
+    {
+      "method": "Cut Sapphire",
+      "missing": [
+        "Sapphire"
+      ]
+    },
+    {
+      "method": "Cut Emerald",
+      "missing": [
+        "Emerald"
+      ]
+    },
+    {
+      "method": "Cut Ruby",
+      "missing": [
+        "Ruby"
+      ]
+    },
+    {
+      "method": "Cut Diamond",
+      "missing": [
+        "Uncut Diamond (input)"
+      ]
+    },
+    {
+      "method": "Cut Dragonstone",
+      "missing": [
+        "Dragonstone"
+      ]
+    },
+    {
+      "method": "Cut Onyx",
+      "missing": [
+        "Onyx",
+        "Uncut Onyx (input)"
+      ]
+    },
+    {
+      "method": "Blow Beer Glass",
+      "missing": [
+        "Beer Glass"
+      ]
+    },
+    {
+      "method": "Blow Candle Lantern",
+      "missing": [
+        "Candle Lantern"
+      ]
+    },
+    {
+      "method": "Blow Oil Lamp",
+      "missing": [
+        "Oil Lamp"
+      ]
+    },
+    {
+      "method": "Blow Vial",
+      "missing": [
+        "Vial"
+      ]
+    },
+    {
+      "method": "Blow Fishbowl",
+      "missing": [
+        "Fishbowl"
+      ]
+    },
+    {
+      "method": "Blow Unpowered Orb",
+      "missing": [
+        "Unpowered Orb"
+      ]
+    },
+    {
+      "method": "Blow Lantern Lens",
+      "missing": [
+        "Lantern Lens"
+      ]
+    },
+    {
+      "method": "Make molten glass",
+      "missing": [
+        "Bucket of Sand (input)",
+        "Soda Ash (input)"
+      ]
+    },
+    {
+      "method": "Chop Magic Logs",
+      "missing": [
+        "Magic Logs"
+      ]
+    },
+    {
+      "method": "Fletch arrow shafts",
+      "missing": [
+        "Arrow Shaft"
+      ]
+    },
+    {
+      "method": "Fletch Oak Shortbow (u)",
+      "missing": [
+        "Oak Shortbow (u)"
+      ]
+    },
+    {
+      "method": "Fletch Oak Longbow (u)",
+      "missing": [
+        "Oak Longbow (u)"
+      ]
+    },
+    {
+      "method": "Fletch Willow Shortbow (u)",
+      "missing": [
+        "Willow Shortbow (u)"
+      ]
+    },
+    {
+      "method": "Fletch Willow Longbow (u)",
+      "missing": [
+        "Willow Longbow (u)"
+      ]
+    },
+    {
+      "method": "Fletch Maple Shortbow (u)",
+      "missing": [
+        "Maple Shortbow (u)"
+      ]
+    },
+    {
+      "method": "Fletch Maple Longbow (u)",
+      "missing": [
+        "Maple Longbow (u)"
+      ]
+    },
+    {
+      "method": "Fletch Yew Shortbow (u)",
+      "missing": [
+        "Yew Shortbow (u)",
+        "Yew Logs (input)"
+      ]
+    },
+    {
+      "method": "Fletch Yew Longbow (u)",
+      "missing": [
+        "Yew Longbow (u)",
+        "Yew Logs (input)"
+      ]
+    },
+    {
+      "method": "Fletch Magic Shortbow (u)",
+      "missing": [
+        "Magic Shortbow (u)"
+      ]
+    },
+    {
+      "method": "Fletch Magic Longbow (u)",
+      "missing": [
+        "Magic Longbow (u)"
+      ]
+    },
+    {
+      "method": "Clean Guam",
+      "missing": [
+        "Guam",
+        "Grimy Guam (input)"
+      ]
+    },
+    {
+      "method": "Clean Marrentill",
+      "missing": [
+        "Marrentill"
+      ]
+    },
+    {
+      "method": "Clean Harralander",
+      "missing": [
+        "Harralander"
+      ]
+    },
+    {
+      "method": "Clean Ranarr",
+      "missing": [
+        "Ranarr",
+        "Grimy Ranarr (input)"
+      ]
+    },
+    {
+      "method": "Clean Toadflax",
+      "missing": [
+        "Toadflax",
+        "Grimy Toadflax (input)"
+      ]
+    },
+    {
+      "method": "Clean Irit",
+      "missing": [
+        "Irit",
+        "Grimy Irit (input)"
+      ]
+    },
+    {
+      "method": "Clean Avantoe",
+      "missing": [
+        "Avantoe"
+      ]
+    },
+    {
+      "method": "Clean Kwuarm",
+      "missing": [
+        "Kwuarm"
+      ]
+    },
+    {
+      "method": "Clean Snapdragon",
+      "missing": [
+        "Snapdragon",
+        "Grimy Snapdragon (input)"
+      ]
+    },
+    {
+      "method": "Clean Cadantine",
+      "missing": [
+        "Cadantine"
+      ]
+    },
+    {
+      "method": "Clean Lantadyme",
+      "missing": [
+        "Lantadyme",
+        "Grimy Lantadyme (input)"
+      ]
+    },
+    {
+      "method": "Clean Dwarf Weed",
+      "missing": [
+        "Dwarf Weed"
+      ]
+    },
+    {
+      "method": "Clean Torstol",
+      "missing": [
+        "Torstol",
+        "Grimy Torstol (input)"
+      ]
+    },
+    {
+      "method": "Make Attack Potion (3)",
+      "missing": [
+        "Attack Potion (3)",
+        "Guam Potion (unf) (input)"
+      ]
+    },
+    {
+      "method": "Make Antipoison (3)",
+      "missing": [
+        "Antipoison (3)",
+        "Marrentill Potion (unf) (input)",
+        "Unicorn Horn Dust (input)"
+      ]
+    },
+    {
+      "method": "Make Strength Potion (3)",
+      "missing": [
+        "Strength Potion (3)",
+        "Tarromin Potion (unf) (input)"
+      ]
+    },
+    {
+      "method": "Make Restore Potion (3)",
+      "missing": [
+        "Restore Potion (3)",
+        "Harralander Potion (unf) (input)",
+        "Red Spiders Eggs (input)"
+      ]
+    },
+    {
+      "method": "Make Prayer Potion (3)",
+      "missing": [
+        "Prayer Potion (3)",
+        "Ranarr Potion (unf) (input)"
+      ]
+    },
+    {
+      "method": "Make Super Attack (3)",
+      "missing": [
+        "Super Attack (3)",
+        "Irit Potion (unf) (input)"
+      ]
+    },
+    {
+      "method": "Make Super Strength (3)",
+      "missing": [
+        "Super Strength (3)",
+        "Kwuarm Potion (unf) (input)"
+      ]
+    },
+    {
+      "method": "Make Super Defence (3)",
+      "missing": [
+        "Super Defence (3)",
+        "Cadantine Potion (unf) (input)"
+      ]
+    },
+    {
+      "method": "Make Ranging Potion (3)",
+      "missing": [
+        "Ranging Potion (3)",
+        "Dwarf Weed Potion (unf) (input)",
+        "Wine of Zamorak (input)"
+      ]
+    },
+    {
+      "method": "Make Magic Potion (3)",
+      "missing": [
+        "Magic Potion (3)",
+        "Lantadyme Potion (unf) (input)"
+      ]
+    },
+    {
+      "method": "Steal from Baker Stall",
+      "missing": [
+        "Cake"
+      ]
+    },
+    {
+      "method": "Steal from Silk Stall",
+      "missing": [
+        "Silk"
+      ]
+    },
+    {
+      "method": "Steal from Fur Stall",
+      "missing": [
+        "Grey Wolf Fur"
+      ]
+    },
+    {
+      "method": "Steal from Silver Stall",
+      "missing": [
+        "Silver Ore"
+      ]
+    },
+    {
+      "method": "Steal from Spice Stall",
+      "missing": [
+        "Spice"
+      ]
+    },
+    {
+      "method": "Farm Potato",
+      "missing": [
+        "Potato"
+      ]
+    },
+    {
+      "method": "Farm Onion",
+      "missing": [
+        "Onion"
+      ]
+    },
+    {
+      "method": "Farm Cabbage",
+      "missing": [
+        "Cabbage"
+      ]
+    },
+    {
+      "method": "Farm Tomato",
+      "missing": [
+        "Tomato"
+      ]
+    },
+    {
+      "method": "Farm Sweetcorn",
+      "missing": [
+        "Sweetcorn"
+      ]
+    },
+    {
+      "method": "Farm Strawberry",
+      "missing": [
+        "Strawberry"
+      ]
+    },
+    {
+      "method": "Farm Watermelon",
+      "missing": [
+        "Watermelon"
+      ]
+    },
+    {
+      "method": "Farm Ranarr Weed",
+      "missing": [
+        "Ranarr Weed"
+      ]
+    },
+    {
+      "method": "Farm Snapdragon",
+      "missing": [
+        "Snapdragon"
+      ]
+    },
+    {
+      "method": "Hunt Crimson Swift",
+      "missing": [
+        "Crimson Swift"
+      ]
+    },
+    {
+      "method": "Hunt Golden Warbler",
+      "missing": [
+        "Golden Warbler"
+      ]
+    },
+    {
+      "method": "Hunt Copper Longtail",
+      "missing": [
+        "Copper Longtail"
+      ]
+    },
+    {
+      "method": "Hunt Ruby Harvest",
+      "missing": [
+        "Ruby Harvest"
+      ]
+    },
+    {
+      "method": "Hunt Tropical Wagtail",
+      "missing": [
+        "Tropical Wagtail"
+      ]
+    },
+    {
+      "method": "Hunt Spotted Kebbit",
+      "missing": [
+        "Spotted Kebbit"
+      ]
+    },
+    {
+      "method": "Hunt Orange Salamander",
+      "missing": [
+        "Orange Salamander"
+      ]
+    },
+    {
+      "method": "Hunt Red Salamander",
+      "missing": [
+        "Red Salamander"
+      ]
+    },
+    {
+      "method": "Hunt Red Chinchompa",
+      "missing": [
+        "Red Chinchompa"
+      ]
+    },
+    {
+      "method": "Hunt Black Salamander",
+      "missing": [
+        "Black Salamander"
+      ]
+    },
+    {
+      "method": "Charge Water Orb",
+      "missing": [
+        "Water Orb",
+        "Unpowered Orb (input)"
+      ]
+    },
+    {
+      "method": "Charge Earth Orb",
+      "missing": [
+        "Earth Orb",
+        "Unpowered Orb (input)"
+      ]
+    },
+    {
+      "method": "Charge Fire Orb",
+      "missing": [
+        "Fire Orb",
+        "Unpowered Orb (input)"
+      ]
+    },
+    {
+      "method": "Charge Air Orb",
+      "missing": [
+        "Air Orb",
+        "Unpowered Orb (input)"
+      ]
+    }
+  ],
+  "note": "Based on bundled snapshot, not live RunicWorld API. Shop rune values are historical reference benchmarks; other shops are not invented."
+}
