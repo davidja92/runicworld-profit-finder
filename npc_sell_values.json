@@ -1,0 +1,14 @@
+{
+  "note": "Item base values, NOT live RunicWorld shop quotes. General-store first sale starts at floor(40% of base value) and declines on subsequent sales. Only supported items are populated; other missing outputs remain incomplete.",
+  "source": "https://oldschool.runescape.wiki/w/General_store",
+  "items": {
+    "tiara": {
+      "value": 100,
+      "source": "https://oldschool.runescape.wiki/w/General_store"
+    },
+    "gold necklace": {
+      "value": 450,
+      "source": "https://oldschool.runescape.wiki/w/High_Level_Alchemy"
+    }
+  }
+}
