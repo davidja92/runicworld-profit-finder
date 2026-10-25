@@ -87,11 +87,42 @@ function setRefreshSchedule(){
 function outPrice(rec,mode){if(!rec)return null;let fields=mode==='last'?['last','bestBuy']:mode==='guide'?['guide','last','bestBuy']:['bestBuy','last'];for(let k of fields)if(rec[k]!==null&&rec[k]!==undefined&&Number.isFinite(Number(rec[k])))return Number(rec[k]);return null;}
 // GE selling price takes priority; NPC buy-back only applies when a GE sale quote is unavailable.
 // Value-based estimates use legacy general-store formula and account for bulk stock depreciation.
+// Automatically generated bulk reference from OSRS Wiki-derived item/shop metadata.
+let wikiReferenceItems={};
+async function loadWikiReference(){
+  try {
+    const response=await fetch('wiki_item_prices.json',{cache:'no-cache'});
+    if(!response.ok)return;
+    const body=await response.json();
+    if(body && typeof body.items==='object') wikiReferenceItems=body.items;
+  } catch(e) { console.warn('Wiki price reference unavailable; existing fallback remains active',e); }
+}
+function wikiShopPurchase(name){
+  const item=wikiReferenceItems[String(name).toLowerCase()];
+  if(!item||!Array.isArray(item.shops)||!Number.isFinite(Number(item.value)))return null;
+  const candidates=item.shops.filter(s=>Number.isFinite(Number(s.sell_percent))&&Number(s.base_stock)>0);
+  if(!candidates.length)return null;
+  const best=candidates.reduce((a,b)=>a.sell_percent<=b.sell_percent?a:b);
+  return {price:Math.max(0,Math.floor(Number(item.value)*Number(best.sell_percent)/100)),
+          source:`Wiki shop: ${best.shop} (reference stock; confirm RunicWorld)`};
+}
+function wikiShopSale(name,quantity){
+  const item=wikiReferenceItems[String(name).toLowerCase()];
+  if(!item||!Number.isFinite(Number(item.value))||Number(item.value)<=0)return null;
+  // A normal general store buys at 40% declining 3% per sale to a minimum of 10%.
+  // Specialist shops have their own stock curves and are not assumed to yield bulk profit.
+  const v=Number(item.value),units=Math.max(1,Math.ceil(Number(quantity)||1));
+  let total=0;
+  for(let i=0;i<Math.min(units,10);i++)total+=Math.floor(v*Math.max(.1,.4-.03*i));
+  total+=Math.max(0,units-10)*Math.floor(v*.1);
+  return {price:total/units,source:`Wiki base value general-store model • ${units} sales • unverified RunicWorld`};
+}
 function npcSellPrice(name,quantity=1){
   const key=String(name).trim().toLowerCase();
   const custom=customSellShops[key];
   if(custom && Number.isFinite(Number(custom.price)) && Number(custom.price)>=0)
     return {price:Number(custom.price),source:`NPC buy-back: ${custom.shop} (entered price, verify stock)`};
+  const wiki=wikiShopSale(key,quantity);if(wiki)return wiki;
   const entry=itemValues[key];
   if(!entry||!Number.isFinite(Number(entry.value))||Number(entry.value)<=0)return {price:null,source:'No verified NPC item value'};
   const v=Number(entry.value),units=Math.max(1,Math.ceil(Number(quantity)||1));
@@ -115,6 +146,7 @@ function ingredientPrice(name){
   const shop=customShops[key]||runeShops[key];
   if(shop && Number.isFinite(Number(shop.price)) && Number(shop.price)>=0)
     return {price:Number(shop.price),source:`NPC shop: ${shop.shop}`};
+  const wiki=wikiShopPurchase(key);if(wiki)return wiki;
   const ge=inputPrice(marketRecord(key));
   return ge===null ? {price:null,source:'No shop reference or GE price'} : {price:ge,source:'RunicWorld GE'};
 }
@@ -170,7 +202,7 @@ function showMethod(){
 function editMethod(e){e.preventDefault();try{const old=methods[activeMethod]||{},name=$('editName').value.trim();if(!name)throw Error('Method name required');methods[activeMethod]={...old,name,category:$('editCategory').value.trim(),note:$('editNote').value,requirements:collectPairs('requirementsRows','skill'),outputs:collectPairs('outputsRows','item'),inputs:collectPairs('inputsRows','item'),flat_income:numeric($('editIncome').value),flat_cost:numeric($('editCost').value),xp_per_action:numeric($('editXP').value),base_actions_per_hour:numeric($('editActions').value)};save();renderMethodSelect();rank();renderAudit();status(`Saved method: ${name}`);}catch(err){status('Cannot save method: '+err.message,true);}}
 function csvExport(){const header=['method','net_gp_hour','gross_gp_hour','cost_gp_hour','missing_prices','missing_skills','rate_info','assumptions'],quote=x=>'"'+String(x??'').replaceAll('"','""')+'"';let lines=[header, ...compute().sort((a,b)=>b.net-a.net).map(r=>[r.name,Math.round(r.net),Math.round(r.gross),Math.round(r.cost),r.missing.join(';'),r.short.join(';'),r.info,r.note])];const blob=new Blob([lines.map(r=>r.map(quote).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='runicworld_profit_ranking.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 async function importFile(e){let f=e.target.files?.[0];if(!f)return;try{let blob=JSON.parse(await f.text());if(Array.isArray(blob.items))applyMarket(blob,`uploaded ${f.name}`);else if(Array.isArray(blob.players)){let name=$('playerName').value.trim();if(!name)throw Error('Enter a player name before importing hiscores JSON.');applyPlayer(importHiscores(blob,name));}else throw Error('Unrecognized JSON: expected items or players array.');}catch(err){status(`Import failed: ${err.message}`,true);}finally{e.target.value='';}}
-async function init(){defaults=await fetchJson('data.json');const reference=await fetchJson('rune_shop_prices.json');const values=await fetchJson('npc_sell_values.json');itemValues=values.items||{};runeShops=Object.fromEntries(Object.entries(reference.runes||{}).map(([name,entry])=>[name.toLowerCase(),entry]));let stored={};try{stored=JSON.parse(localStorage.getItem('rw_profit_web_v5')||'{}');}catch{}skills=Object.fromEntries(defaults.SKILLS.map(s=>[s,Math.max(1,Math.min(99,numeric(stored.skills?.[s]??defaults.DEFAULT_SKILLS[s]??1)))]));// Merge new catalogue entries without losing users' edited methods.
+async function init(){defaults=await fetchJson('data.json');const reference=await fetchJson('rune_shop_prices.json');const values=await fetchJson('npc_sell_values.json');itemValues=values.items||{};await loadWikiReference();runeShops=Object.fromEntries(Object.entries(reference.runes||{}).map(([name,entry])=>[name.toLowerCase(),entry]));let stored={};try{stored=JSON.parse(localStorage.getItem('rw_profit_web_v5')||'{}');}catch{}skills=Object.fromEntries(defaults.SKILLS.map(s=>[s,Math.max(1,Math.min(99,numeric(stored.skills?.[s]??defaults.DEFAULT_SKILLS[s]??1)))]));// Merge new catalogue entries without losing users' edited methods.
 const storedMethods=Array.isArray(stored.methods)?stored.methods:[];
 const byName=new Map(storedMethods.filter(m=>m&&m.name).map(m=>[String(m.name).toLowerCase(),m]));
 methods=defaults.METHODS.map(m=>byName.get(String(m.name).toLowerCase())||structuredClone(m));
