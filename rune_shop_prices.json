@@ -1,0 +1,75 @@
+{
+  "note": "Reference shop starting-price benchmarks from the OSRS Wiki, NOT verified RunicWorld live quotes; stock, access, buying quantity and price increases may change effective cost. Only applied when rune is an input; output sales use RunicWorld GE.",
+  "runes": {
+    "Air Rune": {
+      "price": 4,
+      "shop": "Aubury's Rune Shop, Varrock",
+      "source": "https://oldschool.runescape.wiki/w/Air_rune"
+    },
+    "Water Rune": {
+      "price": 4,
+      "shop": "Betty's Magic Emporium, Port Sarim",
+      "source": "https://oldschool.runescape.wiki/w/Water_rune"
+    },
+    "Earth Rune": {
+      "price": 4,
+      "shop": "Aubury's Rune Shop, Varrock",
+      "source": "https://oldschool.runescape.wiki/w/Earth_rune"
+    },
+    "Fire Rune": {
+      "price": 4,
+      "shop": "Betty's Magic Emporium, Port Sarim",
+      "source": "https://oldschool.runescape.wiki/w/Fire_rune"
+    },
+    "Mind Rune": {
+      "price": 3,
+      "shop": "Aubury's Rune Shop, Varrock",
+      "source": "https://oldschool.runescape.wiki/w/Mind_rune"
+    },
+    "Body Rune": {
+      "price": 3,
+      "shop": "Aubury's Rune Shop, Varrock",
+      "source": "https://oldschool.runescape.wiki/w/Body_rune"
+    },
+    "Cosmic Rune": {
+      "price": 50,
+      "shop": "Lundail's Arena-side Rune Shop, Mage Arena",
+      "source": "https://oldschool.runescape.wiki/w/Cosmic_rune"
+    },
+    "Chaos Rune": {
+      "price": 90,
+      "shop": "Magic Guild Store, Yanille",
+      "source": "https://oldschool.runescape.wiki/w/Chaos_rune"
+    },
+    "Nature Rune": {
+      "price": 180,
+      "shop": "Magic Guild Store, Yanille",
+      "source": "https://oldschool.runescape.wiki/w/Nature_rune"
+    },
+    "Death Rune": {
+      "price": 180,
+      "shop": "Magic Guild Store, Yanille",
+      "source": "https://oldschool.runescape.wiki/w/Death_rune"
+    },
+    "Law Rune": {
+      "price": 240,
+      "shop": "Magic Guild Store, Yanille",
+      "source": "https://oldschool.runescape.wiki/w/Law_rune"
+    },
+    "Blood Rune": {
+      "price": 400,
+      "shop": "Magic Guild Store, Yanille",
+      "source": "https://oldschool.runescape.wiki/w/Blood_rune"
+    },
+    "Soul Rune": {
+      "price": 300,
+      "shop": "Magic Guild Store, Yanille",
+      "source": "https://oldschool.runescape.wiki/w/Soul_rune"
+    },
+    "Astral Rune": {
+      "price": 50,
+      "shop": "Baba Yaga's Magic Shop, Lunar Isle (Lunar Diplomacy)",
+      "source": "https://oldschool.runescape.wiki/w/Astral_rune"
+    }
+  }
+}
