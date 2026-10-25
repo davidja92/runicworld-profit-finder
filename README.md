@@ -1,83 +1,34 @@
-# RunicWorld GE Profit Finder — browser edition v5
+# RunicWorld GE Profit Finder v5.1 — live API connection fix
 
-A static, free-to-host web app based on the standalone Python v4.1 calculator. No WoW addons, in-game client, Python hosting, node server, or visitor accounts needed.
+The site is static and free to host on GitHub Pages. The screenshot's "Failed to fetch" usually indicates CORS or network restrictions. This build adds **optional** Cloudflare Workers API relay for two public RunicWorld endpoints. Using the relay depends on RunicWorld allowing access; do not use it to bypass server-owner restrictions.
 
-## Quick start: GitHub Pages (free)
+## A. Test the existing site first
 
-1. Register or sign in at https://github.com/ .
-2. Go to https://github.com/new and create a **public** repository named `runicworld-profit-finder`. You may check **Add a README** if GitHub requires a first commit.
-3. In the repository choose **Add file → Upload files**.
-4. Open this ZIP on your computer and extract it. Upload these files to the repository **root** (not inside a parent folder):
-   - `index.html`
-   - `styles.css`
-   - `app.js`
-   - `data.json`
-   - `market_snapshot.json`
-   - `README.md` (optional)
-5. Click **Commit changes**.
-6. In the repository, open **Settings → Pages**. Under **Build and deployment**, choose **Deploy from a branch**, select `main` and `/(root)`, then click **Save**.
-7. When GitHub reports a successful Pages deployment, open `https://YOUR_GITHUB_USERNAME.github.io/runicworld-profit-finder/`.
-8. Test **Use snapshot**, **Fetch skills**, **Refresh live GE**, and **Export CSV**.
-9. Share the public website URL. Visitors do not need GitHub accounts.
+1. On the published website, click **Use snapshot**. If that works, hosting and local JSON loading work.
+2. Press **F12 → Console / Network**, click **Refresh live GE**, inspect the failing request. CORS error: proceed below with authorized proxy or ask RunicWorld to enable CORS. HTTP 403/429: upstream server restrictions, which a proxy may not solve; seek API owner permission.
+3. Verify that `https://runicworld.com/api/site/ge/market` returns JSON in a regular browser tab. A working browser tab **does not** prove CORS is allowed.
 
-## Important: API browser access / CORS
+## B. Deploy a free Cloudflare Worker
 
-This browser application directly fetches:
-- https://runicworld.com/api/site/ge/market
-- https://runicworld.com/api/site/hiscores
+1. Create/sign in to a free Cloudflare account at https://dash.cloudflare.com/ . Select **Workers & Pages → Create → Worker** (label wording may vary).
+2. Deploy a sample Worker. Open **Edit code** and replace all code with `cloudflare-worker.js` from this ZIP.
+3. Choose **Deploy**. Copy its URL such as `https://runicworld-api.YOURNAME.workers.dev`.
+4. Visit `YOUR_WORKER_URL/ge/market` in a browser. It should return JSON. Visit `YOUR_WORKER_URL/hiscores`. If it returns HTTP 502, check the upstream API and RunicWorld access policy; the Worker is **not** a guaranteed fix.
+5. In `config.js`, change `proxyBase: ""` to `proxyBase: "https://runicworld-api.YOURNAME.workers.dev"` (your actual URL, no trailing slash).
+6. Upload/replace **all** site files on GitHub Pages (`index.html`, `app.js`, `config.js`, `styles.css`, `data.json`, `market_snapshot.json`). The Worker JS can remain in the repository, but is not loaded by the browser.
+7. Wait for GitHub Pages deployment to finish and hard-refresh (**Ctrl+Shift+R**). Test both **Refresh live GE** and **Fetch skills**.
 
-Browsers require that RunicWorld's API server permit requests from your GitHub Pages website. If the console shows a Cross-Origin Resource Sharing (CORS) error, this **cannot** be fixed purely in HTML or GitHub Pages. Ask the API owner to allow `Access-Control-Allow-Origin: *` on these public, unauthenticated GET endpoints, or configure a managed proxy with responsible caching, limits, and explicit permission to use the API. Do not expose private API keys in the browser.
+You can also use `config.js` with a custom same-origin API proxy, if the server administrator provides one. Avoid public anonymous open proxies. No API keys are required or embedded.
 
-If live API is blocked, the included market snapshot still loads, and you can manually import a downloaded GE or hiscores JSON file using **Import market/hiscores JSON**.
+## C. Still failing?
 
-## Local testing on Windows
+- `Network/CORS failure`: confirm `config.js` is loaded and contains the correct Worker URL, with `/ge/market` and `/hiscores` routes available. Read DevTools Console and Network panel.
+- `HTTP 502`: the Worker could not reach an acceptable JSON upstream response. Check the original API, upstream access policy, or contact the RunicWorld administrator.
+- `HTTP 403/429`: upstream blocks or rate limits; don't attempt to circumvent. Ask API owner for a supported endpoint or CORS permission.
+- **Snapshot works but live doesn't**: the GP/hour calculator still works with snapshot prices until live API access is fixed.
 
-Do not double-click index.html to test the app: browsers often block JSON fetches from file:// URLs.
+## Cost and limits
 
-From the extracted folder, open PowerShell and run:
+GitHub Pages can host this static site for free on a public repo. Cloudflare Workers Free currently includes up to 100,000 requests/day and 10ms CPU time per request. It can be throttled or capped; no unlimited-use guarantee. The Worker caches the market for 60 seconds and hiscores for 180 seconds in a given cache location. Usage is governed by the upstream API's permission and limits.
 
-```
-py -m http.server 8000
-```
-
-Then open http://localhost:8000/ in your browser. Stop the server with Ctrl+C. If `py` is not installed, deploy to GitHub Pages to test instead.
-
-## Application usage
-
-- Enter a RunicWorld username and click **Fetch skills**. The hiscores API returns players with numbered XP fields. Skill mapping follows the API's `skills` list or the v4.1 fallback. The standard RuneScape XP curve converts XP to levels 1–99. Missing skill IDs are treated as zero XP / level 1.
-- Click **Refresh live GE** for market prices. The bundled `market_snapshot.json` is a fallback; it is not live.
-- **Profit ranking** uses current skill requirements, quantities per hour and the existing Python v4.1 price rules. Incomplete prices show `INCOMPLETE`.
-- **Edit methods** to adjust hours, inputs, outputs, skill requirements, notes, optional level-based rate profiles. Data is saved in the user's own browser (`localStorage`). No account synchronization.
-- **Export CSV** downloads the current ranking.
-
-## Rate profiles
-
-The original Python app's rate scaling is ported. Leave a profile `null` for manual hourly assumptions. An optional documented rate profile example:
-
-```json
-{
-  "skill":"Mining",
-  "source":"https://oldschool.runescape.wiki/",
-  "rates":[
-    {"level":15,"actions_per_hour":300,"setup":"Example only; replace with a verified historical configuration"}
-  ]
-}
-```
-
-Do not treat the example rate as researched evidence. Only add production rates verified for 2007-era mechanics or clearly identified RunicWorld exceptions. The shipped defaults remain **illustrative, not verified per-hour measurements**. Lava Dragons are retained as a RunicWorld-specific addition.
-
-## Cost and operational limits
-
-GitHub Pages is available for **public repos** on GitHub Free, subject to GitHub Pages fair-use/resource limits and GitHub's applicable policies. A free site is not a promise of unlimited visitors. Live API traffic depends on RunicWorld's limits and CORS configuration; a free hosting plan does not make the API unlimited.
-
-To update: replace files in the repository root and commit changes. GitHub Pages redeploys them automatically. If users need updated default methods, note that their older locally edited methods persist in browser storage until they press **Restore defaults**.
-
-## Files
-
-- `index.html` — interface
-- `styles.css` — responsive dark theme
-- `app.js` — browser calculations, API fetches and state
-- `data.json` — extracted method/skill defaults from Python v4.1
-- `market_snapshot.json` — offline price snapshot from Python v4.1
-
-Source conversion note: This browser edition ports the method calculation, price fallback, and hiscores skill mapping from Python v4.1; it is not intended to claim modern OSRS rate data has been verified.
+Security: only fixed RunicWorld endpoints are supported, GET only, no arbitrary URLs, no keys. For broader deployment, change `ALLOWED_ORIGIN` from `*` to your exact website origin (e.g., `https://YOURNAME.github.io`) and enforce allowed browser origins in your Worker as needed.

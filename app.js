@@ -1,6 +1,8 @@
 'use strict';
-const API_MARKET='https://runicworld.com/api/site/ge/market';
-const API_HISCORES='https://runicworld.com/api/site/hiscores';
+// Optional public-data proxy. Leave proxyBase blank to fetch directly.
+const proxyBase = String(window.RUNICWORLD_CONFIG?.proxyBase || '').trim().replace(/\/+$/, '');
+const API_MARKET=proxyBase ? `${proxyBase}/ge/market` : 'https://runicworld.com/api/site/ge/market';
+const API_HISCORES=proxyBase ? `${proxyBase}/hiscores` : 'https://runicworld.com/api/site/hiscores';
 const $=id=>document.getElementById(id), numeric=x=>Number.isFinite(Number(x))?Number(x):0;
 const fmt=x=>Number(x).toLocaleString('en-US',{maximumFractionDigits:0});
 const escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -12,10 +14,16 @@ const XP=thresholds();
 function xpLevel(value){let x=Math.max(0,numeric(value)),lo=0,hi=98;while(lo<hi){let mid=Math.ceil((lo+hi)/2);if(XP[mid]<=x)lo=mid;else hi=mid-1;}return lo+1;}
 function importHiscores(blob,name){if(!blob||!Array.isArray(blob.players))throw Error('Expected hiscores object with players array.');let player=blob.players.find(p=>p&&String(p.name||'').trim().toLowerCase()===name.trim().toLowerCase());if(!player)throw Error(`Player "${name}" not found in ${blob.players.length} hiscores entries.`);if(!player.xp||typeof player.xp!=='object')throw Error('Player has no XP data.');let lookup=(Array.isArray(blob.skills)&&blob.skills.length?blob.skills:defaults.HISCORES_SKILLS);let out=Object.fromEntries(defaults.SKILLS.map(s=>[s,1]));let known=0;lookup.forEach((raw,i)=>{let actual=defaults.SKILLS.find(s=>s.toLowerCase()===String(raw).toLowerCase()||(s==='Runecrafting'&&String(raw).toLowerCase()==='runecraft'));if(actual){out[actual]=xpLevel(player.xp[String(i)]??0);known++;}});if(!known)throw Error('No recognizable skill IDs in hiscores response.');return {name:player.name,levels:out,ironman:!!player.ironman};}
 function applyPlayer(data){skills=data.levels;profileName=data.name;$('playerName').value=data.name;renderSkills();rank();save();status(`Imported ${data.name} (${data.ironman?'Ironman':'Normal'}) — ${Object.keys(skills).length} skills converted from XP.`);}
-async function fetchJson(url){const res=await fetch(url,{headers:{Accept:'application/json'},cache:'no-store'});if(!res.ok)throw Error(`HTTP ${res.status}`);return res.json();}
+async function fetchJson(url){
+  let res;
+  try {res=await fetch(url,{headers:{Accept:'application/json'},cache:'no-store'});}
+  catch(e){throw Error(`Network/CORS failure contacting ${new URL(url,location.href).hostname}`);}
+  if(!res.ok){let info='';try{let detail=await res.json();info=detail.error||detail.message||'';}catch{}throw Error(`HTTP ${res.status}${info?' — '+String(info).slice(0,180):''}`);}
+  try{return await res.json();}catch{throw Error('Endpoint did not return valid JSON');}
+}
 async function fetchPlayer(){const name=$('playerName').value.trim();if(!name){status('Enter a player name first.',true);return;}const button=$('loadPlayer');button.disabled=true;status(`Searching hiscores for ${name}…`);try{const blob=await fetchJson(API_HISCORES);if($('playerName').value.trim()!==name){status('Username changed during request. Search again.',true);return;}applyPlayer(importHiscores(blob,name));}catch(e){status(`Hiscores lookup failed: ${e.message}. Existing levels unchanged. You can import a saved hiscores JSON file.`,true);}finally{button.disabled=false;}}
 function applyMarket(blob,label){if(!blob||!Array.isArray(blob.items))throw Error('Expected a market JSON object containing an items array.');market=blob.items.filter(x=>x&&typeof x.name==='string');marketMap=new Map(market.map(x=>[x.name.toLowerCase(),x]));$('marketCount').textContent=fmt(market.length);const generated=blob.generated?` · Generated ${new Date(blob.generated*1000).toLocaleString()}`:'';status(`${fmt(market.length)} GE items loaded from ${label}${generated}`);renderMarket();rank();}
-async function liveMarket(){status('Fetching RunicWorld GE prices…');try{applyMarket(await fetchJson(API_MARKET),'Live API');}catch(e){status(`Live market update failed: ${e.message}. Showing last loaded prices; check CORS/network restrictions.`,true);}}
+async function liveMarket(){status('Fetching RunicWorld GE prices…');try{applyMarket(await fetchJson(API_MARKET),'Live API');}catch(e){status(`Live market update failed: ${e.message}. Showing last loaded prices; check proxy configuration, CORS, or upstream access.`,true);}}
 async function snapshot(){try{applyMarket(await fetchJson('market_snapshot.json'),'bundled snapshot');}catch(e){status(`Snapshot failed: ${e.message}. Try loading the published page instead of opening index.html directly.`,true);}}
 function outPrice(rec,mode){if(!rec)return null;let fields=mode==='last'?['last','bestBuy']:mode==='guide'?['guide','last','bestBuy']:['bestBuy','last'];for(let k of fields)if(rec[k]!==null&&rec[k]!==undefined&&Number.isFinite(Number(rec[k])))return Number(rec[k]);return null;}
 function inputPrice(rec){if(!rec)return null;for(let k of ['bestSell','last','guide'])if(rec[k]!==null&&rec[k]!==undefined&&Number.isFinite(Number(rec[k])))return Number(rec[k]);return null;}
