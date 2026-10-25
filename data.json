@@ -1,0 +1,339 @@
+{
+  "SKILLS": [
+    "Attack",
+    "Strength",
+    "Defence",
+    "Hitpoints",
+    "Magic",
+    "Ranged",
+    "Prayer",
+    "Mining",
+    "Smithing",
+    "Fishing",
+    "Cooking",
+    "Woodcutting",
+    "Fletching",
+    "Firemaking",
+    "Crafting",
+    "Thieving",
+    "Agility",
+    "Herblore",
+    "Slayer",
+    "Runecrafting",
+    "Hunter",
+    "Farming",
+    "Construction"
+  ],
+  "DEFAULT_SKILLS": {
+    "Attack": 65,
+    "Strength": 65,
+    "Defence": 61,
+    "Hitpoints": 63,
+    "Magic": 32,
+    "Prayer": 35,
+    "Mining": 46,
+    "Agility": 25,
+    "Thieving": 26,
+    "Crafting": 27,
+    "Fishing": 28,
+    "Smithing": 13
+  },
+  "METHODS": [
+    {
+      "name": "Chaos druids (Taverley)",
+      "category": "Combat",
+      "requirements": {},
+      "outputs": {
+        "Grimy Ranarr Weed": 6,
+        "Grimy Irit Leaf": 8,
+        "Grimy Avantoe": 6,
+        "Grimy Kwuarm": 4,
+        "Grimy Harralander": 12,
+        "Grimy Tarromin": 14,
+        "Grimy Guam Leaf": 14
+      },
+      "inputs": {},
+      "note": "Illustrative mixed herbs per hour, NOT guaranteed drop rates."
+    },
+    {
+      "name": "Green dragons (Wilderness)",
+      "category": "Combat",
+      "requirements": {
+        "Attack": 50,
+        "Strength": 50
+      },
+      "outputs": {
+        "Green Dragonhide": 35,
+        "Dragon Bones": 35
+      },
+      "inputs": {},
+      "note": "35 kills/hr is illustrative; supplies/PvP losses not included unless entered as flat costs."
+    },
+    {
+      "name": "Blue dragons (safespot)",
+      "category": "Combat",
+      "requirements": {
+        "Magic": 13
+      },
+      "outputs": {
+        "Blue Dragonhide": 20,
+        "Dragon Bones": 20
+      },
+      "inputs": {
+        "Mind Rune": 80,
+        "Air Rune": 120,
+        "Fire Rune": 80
+      },
+      "note": "Illustrative 20 kills/hr; rune cost must match your spell."
+    },
+    {
+      "name": "Lava dragons (keep/bury bones)",
+      "category": "Combat",
+      "requirements": {
+        "Magic": 13
+      },
+      "outputs": {
+        "Black Dragonhide": 15,
+        "Lava Scale": 15
+      },
+      "inputs": {
+        "Mind Rune": 60,
+        "Fire Rune": 45,
+        "Air Rune": 90
+      },
+      "note": "Server-specific Lava Dragons: initial 15 kills/hr (4 minutes each). Bones excluded; revise supplies and yields to match your method."
+    },
+    {
+      "name": "Lava dragons (sell bones)",
+      "category": "Combat",
+      "requirements": {
+        "Magic": 13
+      },
+      "outputs": {
+        "Black Dragonhide": 15,
+        "Lava Scale": 15,
+        "Lava Dragon Bones": 15
+      },
+      "inputs": {
+        "Mind Rune": 60,
+        "Fire Rune": 45,
+        "Air Rune": 90
+      },
+      "note": "Server-specific Lava Dragons: initial 15 kills/hr (4 minutes each); bones sold, if available on RunicWorld GE."
+    },
+    {
+      "name": "Mine iron ore",
+      "category": "Mining",
+      "requirements": {
+        "Mining": 15
+      },
+      "outputs": {
+        "Iron Ore": 450
+      },
+      "inputs": {},
+      "note": "450 ore/hr starting estimate; adjust for mine and bank route."
+    },
+    {
+      "name": "Mine coal",
+      "category": "Mining",
+      "requirements": {
+        "Mining": 30
+      },
+      "outputs": {
+        "Coal": 280
+      },
+      "inputs": {},
+      "note": "280 coal/hr starting estimate; account for banking."
+    },
+    {
+      "name": "Mine gold ore",
+      "category": "Mining",
+      "requirements": {
+        "Mining": 40
+      },
+      "outputs": {
+        "Gold Ore": 220
+      },
+      "inputs": {},
+      "note": "220 ore/hr starting estimate."
+    },
+    {
+      "name": "Mine mithril ore",
+      "category": "Mining",
+      "requirements": {
+        "Mining": 55
+      },
+      "outputs": {
+        "Mithril Ore": 115
+      },
+      "inputs": {},
+      "note": "Illustrative rate."
+    },
+    {
+      "name": "Mine adamantite",
+      "category": "Mining",
+      "requirements": {
+        "Mining": 70
+      },
+      "outputs": {
+        "Adamantite Ore": 65
+      },
+      "inputs": {},
+      "note": "Illustrative rate."
+    },
+    {
+      "name": "Pick up red spiders eggs",
+      "category": "Gathering",
+      "requirements": {},
+      "outputs": {
+        "Red Spiders' Eggs": 300
+      },
+      "inputs": {},
+      "note": "300 eggs/hr starting estimate; danger/travel varies."
+    },
+    {
+      "name": "Spin flax into bow strings",
+      "category": "Crafting",
+      "requirements": {
+        "Crafting": 10
+      },
+      "outputs": {
+        "Bow String": 850
+      },
+      "inputs": {
+        "Flax": 850
+      },
+      "note": "850/hour assumes flax is PURCHASED. For self-gathered flax, treat it as opportunity cost."
+    },
+    {
+      "name": "Gather flax",
+      "category": "Gathering",
+      "requirements": {},
+      "outputs": {
+        "Flax": 700
+      },
+      "inputs": {},
+      "note": "700 flax/hr starting estimate; bank trips vary."
+    },
+    {
+      "name": "Chop oak logs",
+      "category": "Woodcutting",
+      "requirements": {
+        "Woodcutting": 15
+      },
+      "outputs": {
+        "Oak Logs": 500
+      },
+      "inputs": {},
+      "note": "500 logs/hr illustrative."
+    },
+    {
+      "name": "Chop willow logs",
+      "category": "Woodcutting",
+      "requirements": {
+        "Woodcutting": 30
+      },
+      "outputs": {
+        "Willow Logs": 450
+      },
+      "inputs": {},
+      "note": "450 logs/hr illustrative."
+    },
+    {
+      "name": "Chop maple logs",
+      "category": "Woodcutting",
+      "requirements": {
+        "Woodcutting": 45
+      },
+      "outputs": {
+        "Maple Logs": 300
+      },
+      "inputs": {},
+      "note": "300 logs/hr illustrative."
+    },
+    {
+      "name": "Chop yew logs",
+      "category": "Woodcutting",
+      "requirements": {
+        "Woodcutting": 60
+      },
+      "outputs": {
+        "Yew Logs": 160
+      },
+      "inputs": {},
+      "note": "160 logs/hr illustrative."
+    },
+    {
+      "name": "Fish raw lobsters",
+      "category": "Fishing",
+      "requirements": {
+        "Fishing": 40
+      },
+      "outputs": {
+        "Raw Lobster": 180
+      },
+      "inputs": {},
+      "note": "180/hour illustrative."
+    },
+    {
+      "name": "Fish raw swordfish",
+      "category": "Fishing",
+      "requirements": {
+        "Fishing": 50
+      },
+      "outputs": {
+        "Raw Swordfish": 125
+      },
+      "inputs": {},
+      "note": "125/hour illustrative."
+    },
+    {
+      "name": "Fish raw sharks",
+      "category": "Fishing",
+      "requirements": {
+        "Fishing": 76
+      },
+      "outputs": {
+        "Raw Shark": 110
+      },
+      "inputs": {},
+      "note": "110/hour illustrative."
+    },
+    {
+      "name": "Steal silk; sell to NPC",
+      "category": "Thieving",
+      "requirements": {
+        "Thieving": 20
+      },
+      "outputs": {},
+      "inputs": {},
+      "flat_income": 24000,
+      "note": "Assumes 400 silk/hr sold to NPC for 60gp. Merchant cooldown/time may reduce rate."
+    }
+  ],
+  "HISCORES_SKILLS": [
+    "Attack",
+    "Defence",
+    "Strength",
+    "Hitpoints",
+    "Ranged",
+    "Prayer",
+    "Magic",
+    "Cooking",
+    "Woodcutting",
+    "Fletching",
+    "Fishing",
+    "Firemaking",
+    "Crafting",
+    "Smithing",
+    "Mining",
+    "Herblore",
+    "Agility",
+    "Thieving",
+    "Slayer",
+    "Farming",
+    "Runecraft",
+    "Hunter",
+    "Construction"
+  ]
+}
