@@ -95,10 +95,13 @@ Under **Profit ranking**, choose **Sell price**. The default *Estimated average 
 On **Profit ranking**, click **Price details** beneath any method to inspect its hourly items, quantities, prices and source. The **Buyer liquidity** column compares the aggregate active buy quantity reported by RunicWorld with hourly output. It does **not** show the buy quantity at each price level or guarantee that you can fill all orders at the displayed quote. Low-depth methods show a warning. Unknown depth is not zero. Prices using the best-bid/last-trade midpoint are estimates, not actual execution VWAP. Shop buy-back and shop ingredient costs may vary as stock changes.
 
 
-## Sales volume and sorting (v7.0)
+## Sales volume and sorting (v7.1)
 
 In **Profit ranking**, use **Sort by** to order methods by estimated GP/hour, observed 1-hour trade quantity, reported 24-hour quantity, or observed 7-day quantity. The quantity for a multi-output recipe is the *smallest* observed quantity among its outputs. The 24-hour figures come from RunicWorld's `vol24h` market field.
 
-**Important:** RunicWorld's market endpoint exposes a *limited* list of recent trades. The website collects unique trades it encounters while open, locally in your browser, and retains up to seven days. Therefore, the 1-hour and 7-day numbers are **observed lower bounds**, not complete exchange totals. `≥` means at least that many units were seen; `0 ≥` does not prove no transactions. Gaps in browsing, API feed truncation, repeat trades with identical characteristics and browser storage removal can create missing history. The history is not shared between users. Existing trade history prior to v7.0 is not recoverable from 24h totals.
+**Important:** RunicWorld's market endpoint exposes a *limited* list of recent trades. The website collects unique trades it encounters while open, locally in your browser, and retains up to seven days. Therefore, the 1-hour and 7-day numbers are **observed lower bounds**, not complete exchange totals. `≥` means at least that many units were seen; `0 ≥` does not prove no transactions. Gaps in browsing, API feed truncation, repeat trades with identical characteristics and browser storage removal can create missing history. The history is not shared between users. Existing trade history prior to v7.1 is not recoverable from 24h totals.
 
 Shop sales and NPC buy-back have no GE volume; their sale figures are unavailable. Sales-volume sorting is a demand signal, not a promise that all of an item's production will sell at a quoted price.
+
+## Shared sales-volume statistics
+The website can display centrally collected trades from the RunicWorld public GE market feed. The server-reported 24h volume is the API value. Hourly and weekly volume are **observed minimums** because the public endpoint only shares recent transactions. Values may be missing when the collector is delayed. No account or manual JSON upload is needed.
