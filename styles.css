@@ -7,3 +7,44 @@
 .breakdown-btn{margin-top:7px;padding:5px 9px;font-size:12px;min-height:26px}
 #priceBreakdown{margin-top:14px}
 #priceBreakdown[hidden]{display:none}
+
+/* v7.2 - aligned player, market, upload and refresh controls */
+.tools {
+  display: grid;
+  grid-template-columns: minmax(340px, 1.2fr) minmax(310px, 1fr) minmax(240px, 0.9fr);
+  column-gap: 20px;
+  row-gap: 20px;
+  align-items: start;
+}
+.tools > * { min-width: 0; }
+.tool-group { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.tool-group > label, .tool-group > .tool-label { display: block; line-height: 20px; margin: 0; font-size: .87rem; color: #bfcbda; }
+.tool-actions { display: flex; align-items: stretch; gap: 8px; min-height: 44px; }
+.tool-actions button { min-height: 44px; white-space: nowrap; }
+.tool-player .tool-actions input { flex: 1 1 120px; min-width: 0; height: 44px; }
+.tool-market .tool-actions button { flex: 1 1 0; }
+.tool-import input[type=file] { display: block; min-height: 44px; padding: 10px 8px; border: 1px solid #3c4c60; border-radius: 7px; background: #0f1826; }
+.tool-import input[type=file]::file-selector-button { background: #27384d; border: 1px solid #43566a; border-radius: 5px; color: #f4f8ff; padding: 5px 10px; margin-right: 8px; cursor: pointer; }
+.tools .refreshsettings { grid-column: 1 / -1; margin: 0; padding: 16px 0 0; border-top: 1px solid #304054; display: grid; grid-template-columns: minmax(220px, 320px) minmax(0, 1fr); gap: 12px 20px; align-items: center; }
+.refresh-control { min-width: 0; }
+.refresh-control > label { margin: 0 0 8px; }
+.tools .refreshsettings select { max-width: none; height: 44px; }
+.refresh-info { display: flex; flex-direction: column; justify-content: center; gap: 5px; min-width: 0; }
+.refresh-info small { display: block; overflow-wrap: anywhere; }
+.tools > .status { grid-column: 1 / -1; padding-top: 10px; border-top: 1px solid #304054; }
+@media (max-width: 1120px) {
+  .tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tool-import { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  .tools { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .tool-import { grid-column: auto; }
+  .tools .refreshsettings { grid-template-columns: minmax(0, 1fr); }
+  .tool-actions { flex-wrap: nowrap; }
+  .tool-player .tool-actions button { padding-inline: 12px; }
+}
+@media (max-width: 380px) {
+  .tool-market .tool-actions { flex-direction: column; }
+  .tool-player .tool-actions { flex-wrap: wrap; }
+  .tool-player .tool-actions button { width: 100%; }
+}
