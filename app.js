@@ -9,6 +9,58 @@ const escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 let defaults={},skills={},methods=[],market=[],marketMap=new Map(),activeMethod=0,profileName='',runeShops={},customShops={},customSellShops={},itemValues={};
 let refreshTimer=null,marketFetchPending=false,lastSuccessfulLive=0,marketSource='none';
 const MARKET_CACHE_KEY='rw_profit_live_market_v63', REFRESH_KEY='rw_profit_auto_refresh_minutes';
+// The API provides a 24-hour aggregate and only a limited recent-trades list.
+// Do NOT interpret locally observed 1h/7d trades as complete historical turnover.
+const TRADE_STORAGE_KEY='rw_observed_trades_v70', VOLUME_SORT_KEY='rw_volume_sort_v70';
+let observedTrades=new Map(),observingSince=0,latestTradeFeedCount=0;
+function tradeIdentity(t){return [t.entry??'',String(t.name||'').toLowerCase(),t.at,t.price,t.qty].join('|');}
+function readObservedTrades(){
+  try{const v=JSON.parse(localStorage.getItem(TRADE_STORAGE_KEY)||'null');if(!v||!Array.isArray(v.trades))return;
+    observingSince=Number(v.since)||0;for(const t of v.trades){if(Number.isFinite(Number(t.at))&&Number.isFinite(Number(t.qty)))observedTrades.set(tradeIdentity(t),t);}
+  }catch(e){}
+}
+function captureTrades(blob){
+  if(!Array.isArray(blob.trades))return;
+  const now=Date.now();if(!observingSince)observingSince=now;
+  latestTradeFeedCount=blob.trades.length;
+  for(const t of blob.trades){if(!t||!Number.isFinite(Number(t.at))||!Number.isFinite(Number(t.qty))||Number(t.qty)<=0||!t.name)continue;
+    if(Number(t.at)*1000>now+60000||Number(t.at)*1000<now-7*86400000)continue;
+    observedTrades.set(tradeIdentity(t),{name:t.name,entry:t.entry??null,at:Number(t.at),price:Number(t.price)||0,qty:Number(t.qty)});
+  }
+  for(const [key,t] of observedTrades){if(t.at*1000<now-7*86400000)observedTrades.delete(key);}
+  // Storage cap is a safety bound, not a claim of full weekly coverage.
+  if(observedTrades.size>45000){const sorted=[...observedTrades.entries()].sort((a,b)=>a[1].at-b[1].at);for(const [key] of sorted.slice(0,observedTrades.size-45000))observedTrades.delete(key);}
+  try{localStorage.setItem(TRADE_STORAGE_KEY,JSON.stringify({since:observingSince,trades:[...observedTrades.values()]}));}catch(e){}
+}
+function itemTradeVolume(name,period){
+  const rec=marketRecord(name);
+  if(!rec)return {value:null,kind:'missing'};
+  if(period==='day'){
+    const v=rec.vol24h;
+    return v===null||v===undefined||!Number.isFinite(Number(v))?{value:null,kind:'unavailable'}:{value:Math.max(0,Number(v)),kind:'reported'};
+  }
+  if(!observingSince)return {value:null,kind:'not-observed'};
+  const now=Date.now(),duration=period==='hour'?3600000:604800000;
+  let count=0;for(const t of observedTrades.values()){
+    if(t.at*1000<now-duration||t.at*1000>now+60000)continue;
+    if(Number.isFinite(Number(rec.entry))&&rec.entry!==null&&t.entry!==null){if(Number(t.entry)===Number(rec.entry))count+=t.qty;}
+    else if(String(t.name).toLowerCase()===String(rec.name).toLowerCase())count+=t.qty;
+  }
+  return {value:count,kind:'partial'};
+}
+function methodTradeVolume(method,period){
+ const names=Object.keys(rateQuantities(method).outputs||{});
+ if(!names.length)return {value:null,kind:'none'};
+ const values=names.map(name=>itemTradeVolume(name,period));
+ if(values.some(x=>x.value===null))return {value:null,kind:'unavailable'};
+ return {value:Math.min(...values.map(x=>x.value)),kind:values.some(x=>x.kind==='partial')?'partial':'reported'};
+}
+function volumeLabel(v){return v.value===null?'—':`${fmt(v.value)}${v.kind==='partial'?' ≥':''}`;}
+function renderTradeCoverage(){const el=$('tradeCoverage');if(!el)return;
+ const observed=observingSince?new Date(observingSince).toLocaleString():'not yet';
+ el.textContent=`Volume coverage: 24h values are reported by RunicWorld. 1h and 7d are observed lower bounds from the latest ${latestTradeFeedCount} trades per API response (this browser has been collecting since ${observed}). An observed 0 does NOT prove no trades occurred. A refresh may miss transactions between polls.`;
+}
+
 const ITEM_ALIASES={'adamant bar':'adamantite bar','rune bar':'runite bar','runite ore':'runite ore','adamant ore':'adamantite ore','runecrafting essence':'rune essence'};
 function marketRecord(name){const key=String(name).trim().toLowerCase();return marketMap.get(key)||marketMap.get(ITEM_ALIASES[key]||'');}
 const save=()=>{try{localStorage.setItem('rw_profit_web_v5',JSON.stringify({skills,methods,profileName,customShops,customSellShops,priceMode:$('priceMode').value}));}catch{}};
@@ -57,6 +109,7 @@ function applyMarket(blob,label,source='live'){
   const previousCount=marketMap.size;
   mergeMarketItems(items,source);
   if(source==='live'){
+    captureTrades(blob);renderTradeCoverage();
     lastSuccessfulLive=Date.now();marketSource='live';cacheMarket();
   }else if(marketSource==='none')marketSource=source;
   const generated=blob.generated?` · API generated ${new Date(blob.generated*1000).toLocaleString()}`:'';
@@ -206,7 +259,17 @@ function showPriceBreakdown(methodIndex){
 function compute(){return methods.map(m=>{let short=Object.entries(m.requirements||{}).filter(([k,v])=>numeric(skills[k]||1)<numeric(v)).map(([k,v])=>`${k} ${v}`);let {outputs,inputs,income,cost,info}=rateQuantities(m),missing=[];for(let [key,q] of Object.entries(outputs)){let sale=salePrice(key,q,$('priceMode').value);if(sale.price===null)missing.push(key);else income+=numeric(q)*sale.price;}for(let [key,q] of Object.entries(inputs)){let value=ingredientPrice(key);if(value.price===null)missing.push(`${key} (cost)`);else cost+=numeric(q)*value.price;}const baseActions=numeric(m.base_actions_per_hour);const effectiveTier=(m.rate_profile?.rates||[]).filter(t=>numeric(t.level)<=numeric(skills[m.rate_profile.skill]||1)).sort((a,b)=>numeric(a.level)-numeric(b.level)).at(-1);const xpRate=numeric(m.xp_per_action)*(effectiveTier&&info.includes('actions/hr')?numeric(effectiveTier.actions_per_hour):baseActions);
 return {name:m.name||'Unnamed',category:m.category||'Other',net:income-cost,gross:income,cost,short,missing,info,note:m.note||'',xpRate};});}
 function rank(){
- let results=compute().sort((a,b)=>Number(a.missing.length>0)-Number(b.missing.length>0)||b.net-a.net);
+ const sort=$('volumeSort')?.value||'profit';
+ let results=compute().sort((a,b)=>{
+   const incomplete=Number(a.missing.length>0)-Number(b.missing.length>0);if(incomplete)return incomplete;
+   if(sort!=='profit'){
+     const va=methodTradeVolume(methods.find(m=>m.name===a.name),sort).value;
+     const vb=methodTradeVolume(methods.find(m=>m.name===b.name),sort).value;
+     if(va===null&&vb!==null)return 1;if(vb===null&&va!==null)return -1;
+     if(va!==null&&vb!==null&&va!==vb)return vb-va;
+   }
+   return b.net-a.net;
+ });
  const qualified=results.filter(r=>!r.short.length),best=qualified.find(r=>!r.missing.length);
  $('bestProfit').textContent=best?fmt(best.net):'—';$('eligibleCount').textContent=fmt(qualified.length);
  const q=$('methodSearch').value.trim().toLowerCase(),eligibleOnly=$('eligibleOnly').checked,cat=$('categoryFilter').value;
@@ -215,9 +278,10 @@ function rank(){
    const i=methods.findIndex(m=>m.name===r.name);const method=methods[i],outputs=rateQuantities(method).outputs;
    const liquidity=Object.entries(outputs).map(([name,qty])=>liquidityFor(name,qty));
    const low=liquidity.filter(x=>x.ratio!==null&&x.ratio<1),unknown=liquidity.filter(x=>x.ratio===null);
+   const hour=methodTradeVolume(method,'hour'),day=methodTradeVolume(method,'day'),week=methodTradeVolume(method,'week');
    const label=low.length?`⚠ ${low.length} low-depth output${low.length===1?'':'s'}`:unknown.length?`Depth unknown (${unknown.length})`:'Listed quantity covers 1h*';
-   return `<tr><td>${escapeHtml(r.name)}<div><button type="button" class="secondary breakdown-btn" data-method-index="${i}">Price details</button></div></td><td class="number ${r.missing.length?'warn':'good'}">${r.missing.length?'INCOMPLETE':fmt(r.net)}</td><td class="number">${fmt(r.gross)}</td><td class="number">${fmt(r.cost)}</td><td class="number">${r.xpRate?fmt(r.xpRate):'—'}</td><td>${escapeHtml(label)}</td><td>${escapeHtml(r.missing.join(', ')||'—')}</td><td>${escapeHtml(r.short.length?'LOCKED: '+r.short.join(', '):r.info)}${r.note?`<div class="footnote">${escapeHtml(r.note)}</div>`:''}</td></tr>`;
- }).join('')||'<tr><td colspan="8">No matching methods.</td></tr>';
+   return `<tr><td>${escapeHtml(r.name)}<div><button type="button" class="secondary breakdown-btn" data-method-index="${i}">Price details</button></div></td><td class="number ${r.missing.length?'warn':'good'}">${r.missing.length?'INCOMPLETE':fmt(r.net)}</td><td class="number">${fmt(r.gross)}</td><td class="number">${fmt(r.cost)}</td><td class="number">${r.xpRate?fmt(r.xpRate):'—'}</td><td class="number" title="Observed minimum, not complete hourly totals">${volumeLabel(hour)}</td><td class="number">${volumeLabel(day)}</td><td class="number" title="Observed minimum, not complete weekly totals">${volumeLabel(week)}</td><td>${escapeHtml(label)}</td><td>${escapeHtml(r.missing.join(', ')||'—')}</td><td>${escapeHtml(r.short.length?'LOCKED: '+r.short.join(', '):r.info)}${r.note?`<div class="footnote">${escapeHtml(r.note)}</div>`:''}</td></tr>`;
+ }).join('')||'<tr><td colspan="11">No matching methods.</td></tr>';
  $('rankRows').querySelectorAll('.breakdown-btn').forEach(b=>b.addEventListener('click',()=>showPriceBreakdown(Number(b.dataset.methodIndex))));
 }
 function renderSkills(){$('skillGrid').innerHTML=defaults.SKILLS.map(k=>`<label>${escapeHtml(k)}<input type="number" min="1" max="99" step="1" data-skill="${escapeHtml(k)}" value="${numeric(skills[k]||1)}"></label>`).join('');$('skillGrid').querySelectorAll('input').forEach(el=>el.addEventListener('change',()=>{skills[el.dataset.skill]=Math.max(1,Math.min(99,Math.trunc(numeric(el.value)||1)));el.value=skills[el.dataset.skill];rank();save();}));}
@@ -273,5 +337,5 @@ const storedMethods=Array.isArray(stored.methods)?stored.methods:[];
 const byName=new Map(storedMethods.filter(m=>m&&m.name).map(m=>[String(m.name).toLowerCase(),m]));
 methods=defaults.METHODS.map(m=>{const stored=byName.get(String(m.name).toLowerCase());return stored ? {...stored,rate_profile:(m.rate_profile && (!stored.rate_profile || ['wiki_reference','wiki_range_midpoint','modeled_not_verified'].includes(stored.rate_profile?.evidence))) ? m.rate_profile : (stored.rate_profile||null),rate_evidence:m.rate_evidence} : structuredClone(m);});
 const defaultNames=new Set(defaults.METHODS.map(m=>String(m.name).toLowerCase()));
-methods.push(...storedMethods.filter(m=>m&&m.name&&!defaultNames.has(String(m.name).toLowerCase())));customShops=stored.customShops&&typeof stored.customShops==='object'?stored.customShops:{};customSellShops=stored.customSellShops&&typeof stored.customSellShops==='object'?stored.customSellShops:{};profileName=stored.profileName||'';if($('playerName'))$('playerName').value=profileName;if($('priceMode'))$('priceMode').value=(stored.priceMode&&stored.priceMode!=='buy')?stored.priceMode:'blend';renderSkills();renderMethodSelect();renderCustomShops();renderCustomSellShops();$('shopForm').addEventListener('submit',addShopOverride);$('sellShopForm').addEventListener('submit',addSellOverride);for(const [btn,target,kind] of [['addRequirementRow','requirementsRows','skill'],['addOutputRow','outputsRows','item'],['addInputRow','inputsRows','item']])$(btn).addEventListener('click',()=>addPairRow(target,'','',kind));$('categoryFilter').innerHTML='<option value="">All categories</option>'+[...new Set(methods.map(m=>m.category||'Other'))].sort().map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');$('loadPlayer').addEventListener('click',fetchPlayer);$('playerName').addEventListener('keydown',e=>{if(e.key==='Enter')fetchPlayer();});$('refreshMarket').addEventListener('click',()=>liveMarket());$('refreshInterval').addEventListener('change',setRefreshSchedule);$('loadSample').addEventListener('click',snapshot);$('fileUpload').addEventListener('change',importFile);$('methodSearch').addEventListener('input',rank);$('categoryFilter').addEventListener('change',rank);$('eligibleOnly').addEventListener('change',rank);$('priceMode').addEventListener('change',()=>{rank();save();});$('itemSearch').addEventListener('input',renderMarket);$('exportCsv').addEventListener('click',csvExport);$('resetSkills').addEventListener('click',()=>{skills=Object.fromEntries(defaults.SKILLS.map(s=>[s,1]));renderSkills();rank();save();});$('methodSelect').addEventListener('change',e=>{activeMethod=Number(e.target.value);showMethod();});$('methodForm').addEventListener('submit',editMethod);$('addMethod').addEventListener('click',()=>{methods.push({name:'New method',category:'Other',requirements:{},outputs:{},inputs:{},flat_income:0,flat_cost:0,note:''});activeMethod=methods.length-1;renderMethodSelect();save();rank();});$('removeMethod').addEventListener('click',()=>{if(methods.length<=1)return;methods.splice(activeMethod,1);activeMethod=0;renderMethodSelect();save();rank();});$('resetMethods').addEventListener('click',()=>{if(confirm('Restore original methods? This overwrites local method edits.')){methods=structuredClone(defaults.METHODS);activeMethod=0;renderMethodSelect();rank();save();}});document.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===button));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===button.dataset.tab));}));let savedInterval='5';try{savedInterval=localStorage.getItem(REFRESH_KEY)??'5';}catch(e){}if($('refreshInterval')){$('refreshInterval').value=['0','1','5','10','15','30','60'].includes(savedInterval)?savedInterval:'5';setRefreshSchedule();}const hadCache=loadCachedMarket();if(!hadCache)await snapshot();await liveMarket();document.addEventListener('visibilitychange',()=>{if(!document.hidden&&lastSuccessfulLive&&Number($('refreshInterval').value)>0&&Date.now()-lastSuccessfulLive>=Number($('refreshInterval').value)*60000)liveMarket({automatic:true});});renderAudit();}
+methods.push(...storedMethods.filter(m=>m&&m.name&&!defaultNames.has(String(m.name).toLowerCase())));customShops=stored.customShops&&typeof stored.customShops==='object'?stored.customShops:{};customSellShops=stored.customSellShops&&typeof stored.customSellShops==='object'?stored.customSellShops:{};profileName=stored.profileName||'';if($('playerName'))$('playerName').value=profileName;if($('priceMode'))$('priceMode').value=(stored.priceMode&&stored.priceMode!=='buy')?stored.priceMode:'blend';renderSkills();renderMethodSelect();renderCustomShops();renderCustomSellShops();$('shopForm').addEventListener('submit',addShopOverride);$('sellShopForm').addEventListener('submit',addSellOverride);for(const [btn,target,kind] of [['addRequirementRow','requirementsRows','skill'],['addOutputRow','outputsRows','item'],['addInputRow','inputsRows','item']])$(btn).addEventListener('click',()=>addPairRow(target,'','',kind));$('categoryFilter').innerHTML='<option value="">All categories</option>'+[...new Set(methods.map(m=>m.category||'Other'))].sort().map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');$('loadPlayer').addEventListener('click',fetchPlayer);$('playerName').addEventListener('keydown',e=>{if(e.key==='Enter')fetchPlayer();});$('refreshMarket').addEventListener('click',()=>liveMarket());$('refreshInterval').addEventListener('change',setRefreshSchedule);$('loadSample').addEventListener('click',snapshot);$('fileUpload').addEventListener('change',importFile);$('methodSearch').addEventListener('input',rank);$('categoryFilter').addEventListener('change',rank);$('volumeSort').addEventListener('change',()=>{try{localStorage.setItem(VOLUME_SORT_KEY,$('volumeSort').value)}catch(e){}rank();});$('eligibleOnly').addEventListener('change',rank);$('priceMode').addEventListener('change',()=>{rank();save();});$('itemSearch').addEventListener('input',renderMarket);$('exportCsv').addEventListener('click',csvExport);$('resetSkills').addEventListener('click',()=>{skills=Object.fromEntries(defaults.SKILLS.map(s=>[s,1]));renderSkills();rank();save();});$('methodSelect').addEventListener('change',e=>{activeMethod=Number(e.target.value);showMethod();});$('methodForm').addEventListener('submit',editMethod);$('addMethod').addEventListener('click',()=>{methods.push({name:'New method',category:'Other',requirements:{},outputs:{},inputs:{},flat_income:0,flat_cost:0,note:''});activeMethod=methods.length-1;renderMethodSelect();save();rank();});$('removeMethod').addEventListener('click',()=>{if(methods.length<=1)return;methods.splice(activeMethod,1);activeMethod=0;renderMethodSelect();save();rank();});$('resetMethods').addEventListener('click',()=>{if(confirm('Restore original methods? This overwrites local method edits.')){methods=structuredClone(defaults.METHODS);activeMethod=0;renderMethodSelect();rank();save();}});document.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===button));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===button.dataset.tab));}));let savedInterval='5';try{savedInterval=localStorage.getItem(REFRESH_KEY)??'5';}catch(e){}if($('refreshInterval')){$('refreshInterval').value=['0','1','5','10','15','30','60'].includes(savedInterval)?savedInterval:'5';setRefreshSchedule();}readObservedTrades();try{$('volumeSort').value=localStorage.getItem(VOLUME_SORT_KEY)||'profit';}catch(e){}renderTradeCoverage();const hadCache=loadCachedMarket();if(!hadCache)await snapshot();await liveMarket();document.addEventListener('visibilitychange',()=>{if(!document.hidden&&lastSuccessfulLive&&Number($('refreshInterval').value)>0&&Date.now()-lastSuccessfulLive>=Number($('refreshInterval').value)*60000)liveMarket({automatic:true});});renderAudit();}
 init().catch(e=>{console.error('RunicWorld initialization failure',e);status(`App could not start: ${e.message}. Ensure all v6.3.1 files were uploaded together and hard-refresh.`,true);});
