@@ -84,3 +84,12 @@ For standard glassblowing, ordinary fish cooking, and conventional unstrung bow 
 ## How reliable are production rates?
 
 In **Profit ranking**, read the rate notes for each activity. Wiki reference speeds are guide benchmarks for their specified setup, not guaranteed RunicWorld maxima. Provisional modeled speeds and unverified estimates are explicitly distinguished in the project rate audit. Cooking rates currently exclude burn probability, and gathering successes depend on levels, gear, and location. You can adjust **Actions/hour** in Edit methods for your own play style; no JSON editing is necessary.
+
+
+## How sell-price estimates work (v6.8)
+
+Under **Profit ranking**, choose **Sell price**. The default *Estimated average (bid / last)* takes the arithmetic midpoint between the highest live GE buy offer and last traded price when both exist. This is an indicative quote, **not a volume-weighted execution price**. When the last trade is unavailable it falls back to best buy. Other options include highest buy offer, last trade, and guide price. Actual proceeds for large quantities may be lower. The GE API used here lacks price-level order-book depths, so the site cannot calculate executable VWAP for an hourly batch.
+
+## How to read price and liquidity estimates
+
+On **Profit ranking**, click **Price details** beneath any method to inspect its hourly items, quantities, prices and source. The **Buyer liquidity** column compares the aggregate active buy quantity reported by RunicWorld with hourly output. It does **not** show the buy quantity at each price level or guarantee that you can fill all orders at the displayed quote. Low-depth methods show a warning. Unknown depth is not zero. Prices using the best-bid/last-trade midpoint are estimates, not actual execution VWAP. Shop buy-back and shop ingredient costs may vary as stock changes.

@@ -3,3 +3,7 @@
 .editorSection{grid-column:1/-1;padding:12px;border:1px solid #34445a;border-radius:8px}.editorSection h3{margin:0 0 10px}.pairrow{display:grid;grid-template-columns:minmax(160px,2fr) minmax(90px,1fr) auto;gap:8px;margin:7px 0;align-items:center}.shopForm{display:grid;grid-template-columns:2fr 2fr 1fr auto;gap:12px;align-items:end}.shopForm button{margin-bottom:6px}@media(max-width:800px){.shopForm,.pairrow{grid-template-columns:1fr}.pairrow{padding:10px;border:1px solid #34445a;border-radius:7px}}
 
 .refreshsettings{display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin-top:12px}.refreshsettings select{max-width:250px}.refreshsettings small{color:#9eafbe;font-size:.78rem}
+
+.breakdown-btn{margin-top:7px;padding:5px 9px;font-size:12px;min-height:26px}
+#priceBreakdown{margin-top:14px}
+#priceBreakdown[hidden]{display:none}
