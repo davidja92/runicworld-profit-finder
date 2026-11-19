@@ -1,107 +1,33 @@
-# RunicWorld GE Profit Finder
+# Runic Quest Hub
 
-**Free, browser-based money-making calculator for RunicWorld players.** No download, registration, or game addon is needed.
+This version adds GE & profits, skill-linked recipe costs, a watchlist, observed trade charts, and client-matched Wiki vendor fallback. Price priority is current directional GE quotes, then actual trade history, then NPC fallback. Guide prices are not trade history. All Wiki shop prices remain reference estimates; client presence does not confirm server stock. Upload every file in this website folder to the repository root. Full use/source/maintenance notes are supplied alongside this folder.
 
-**Open the website:** https://davidja92.github.io/runicworld-profit-finder/
+The skill planner now uses the installed RunicWorld client data: 2,177 recipe/training entries and 2,773 skill-guide unlocks. Search and category filters are available. Missing XP, ingredient information, unresolved item names and conflicting XP are shown explicitly. No generic OSRS training fallback or game-sync component is used. See the supplied UPLOAD-INSTRUCTIONS.md for extraction provenance and limits.
 
-The tool compares money-making methods with current RunicWorld Grand Exchange (GE) prices, your character's skill levels, and available NPC shop reference prices. It is an unofficial community project, not affiliated with RuneScape or RunicWorld.
+Static RunicWorld quest planner for GitHub Pages. Open `index.html` using a local development server or publish these files at the root of a GitHub Pages repository. No build tooling needed.
 
-## Quick start
+## What works
+- Player lookup uses the **same Cloudflare Worker** and hiscores parsing as the existing RunicWorld GE Profit Finder: `config.js` supplies the proxy base, the app fetches `${proxyBase}/hiscores`, matches the player in `players[]`, and converts the indexed XP to skill levels using the `skills[]` mapping.
+- Searchable quest catalogue, skill badges, local completed quest tracking, linked prerequisite chains, item checklists and selected built-in quest outlines.
+- Loads full OSRS Wiki `/Quick guide` HTML into the page using MediaWiki's cross-origin JSON API when permitted; otherwise displays an external link.
+- Local browser storage preserves character name, saved skills and checklist progress.
 
-1. **Open the website** using the link above. It attempts to load live GE prices automatically. You can also select **Refresh live GE**.
-2. **Enter your RunicWorld player username** in **Player username** and click **Fetch skills**. The calculator looks up your character's XP on the RunicWorld hiscores and converts it into skill levels.
-3. Open **Profit ranking** and leave **Only methods I qualify for** checked to see activities allowed by your imported levels.
-4. Review **Net GP/hr**, **Gross**, **Costs**, and **Missing prices**. Methods with missing inputs or outputs are marked **INCOMPLETE** rather than assigned a guessed profit.
-5. Filter by category or search for an activity such as cooking, runecrafting, mining, or dragons.
+## Important limitations
+The Cloudflare endpoint and mapping were copied from the published `davidja92/runicworld-profit-finder` repository on November 1, 2026. The connection cannot be live-tested in this build environment; confirm with a known player on GitHub Pages. Keep `config.js` aligned with the Profit Finder if the Worker URL changes.
 
-## Main tabs
+The local quest requirements are **partial**. Uncurated skills, quest requirements, items, and quest-point requirements are labeled unverified, not 'none'. Full walkthroughs depend on the OSRS Wiki API being accessible in your browser. The item checklist covers curated metadata only; read the full guide for all items and alternate approaches. Quests and wiki pages on modern OSRS may not exist or match RunicWorld's custom content.
 
-### Profit ranking
+RunicWorld hiscores may use different skill indexing; verify a loaded player's skills against in-game values before relying on the eligibility results. Quest completion cannot be automatically extracted from the hiscores endpoint, so it is tracked manually. This is a starter application, not a fully validated quest database.
 
-- **Highest complete eligible GP/hr** summarizes the best fully priced method that meets your skill requirements.
-- **Eligible methods** counts methods your levels permit.
-- **Only methods I qualify for** hides activities requiring higher skills.
-- **Sell price** changes the GE quote used to value outputs; this can affect rankings.
-- **Export CSV** downloads the current method calculations for further analysis.
+## Host on GitHub Pages
+1. Create a new GitHub repository, e.g. `runicworld-quest-hub`.
+2. Upload `index.html`, `config.js`, `app.js`, `quests.js`, `README.md` to its repository root.
+3. Settings → Pages → Deploy from branch → `main` / `(root)` → Save.
+4. Open the generated Pages URL and enter your RunicWorld character name.
 
-**Profit figures are estimates**, not guaranteed earnings. Some action rates are editable assumptions; travel, competition, stock changes, failed actions, and actual sale conditions can reduce profits.
+The OSRS Wiki is a community project; provide attribution and follow its reuse and API policies. This site is not affiliated with Jagex or RunicWorld.
 
-### My skills
+## RunicWorld screenshot quest inventory (November 1, 2026)
 
-Use **Fetch skills** to import levels automatically. Alternatively, open **My skills** and edit an individual level. Changes immediately recalculate available methods. **Reset to level 1** clears the entered levels, so use it only if you intend to start over.
+The quest list has been replaced with the **130 distinct entries** shown in the user-provided in-game screenshots. No newer OSRS quests are shown. In-game labels have been preserved, with wiki aliases for renamed quest pages. The screenshots show 13 green entries, but these are **not automatically marked completed**: browser progress is manually tracked because screenshots may show a different character than the current username. The green names are recorded in `screenshotCompleted` for reference. Some listings are activities or custom entries rather than OSRS quest pages.
 
-### GE market
-
-Search available RunicWorld items and inspect displayed buyer, seller, last-trade, guide, volume, and ingredient-cost information. **Refresh live GE** requests the latest data available through the RunicWorld API. **Use snapshot** loads the bundled fallback dataset; it can be older and smaller than the live market.
-
-### Edit methods
-
-Select an existing money-making method or click **Add method**. Enter its name, category, required skill levels, ingredients, outputs, and hourly production assumptions through the on-screen form. Use **+ Add skill requirement**, **+ Add ingredient**, and **+ Add output** as needed, then click **Save method**.
-
-Changes to custom methods are saved **in your browser**, not published automatically to all players. **Restore defaults** removes your customizations and restores the shipped methods.
-
-### Missing prices & shops
-
-- **Price coverage audit** lists item prices that the calculator still cannot resolve.
-- **Add a verified shop price** records what an NPC shop charges you to **buy** an ingredient.
-- **Fallback when selling items to NPC shops** records what an NPC pays **you** to sell an output when a usable GE selling price is missing.
-
-These are different prices. Only enter actual observed or reliably sourced RunicWorld prices. Shop overrides are stored locally in your browser.
-
-## How prices are chosen
-
-- **Selling an output:** RunicWorld GE price is preferred; if unavailable, the calculator can use a configured NPC buy-back price or an estimated general-store value when documented item base data exists.
-- **Buying ingredients:** Supported NPC shop references can take priority; otherwise, RunicWorld GE input prices apply.
-- **Wiki-derived reference data:** The site may include historical OSRS item values and shop-price estimates. These are **not verified RunicWorld shop quotations** and can differ because of server changes, quest access, stock, or shop rules.
-- **Missing price:** The method remains incomplete; the calculator does not assume an item is free.
-
-The included content focuses on 2007-era members methods plus confirmed RunicWorld additions such as Lava Dragons. A method's presence in the list is not a guarantee that every ingredient, NPC shop, or production rate works identically on the server.
-
-## Automatic market refresh
-
-Use the **Automatic live GE refresh** dropdown near the top of the website. Choose **Off**, **1**, **5**, **10**, **15**, **30**, or **60 minutes**. The default is **every 5 minutes**. Your preference is saved in your browser.
-
-Refreshing operates only while the page is open; background tabs may be throttled. The site can discover new GE items returned by the API and retain previously seen items locally. Old retained quotes may become stale.
-
-## Troubleshooting
-
-- **Live GE fails:** Click **Use snapshot** for fallback prices; retry **Refresh live GE** later. Browser network restrictions or an unavailable API can block live updates.
-- **Player not found:** Check the spelling of your RunicWorld name and try again; you can still enter skill levels manually.
-- **Method says INCOMPLETE:** Open **Missing prices & shops** to see unresolved item values. Live market refresh can resolve some missing items automatically.
-- **Old data or layout:** Refresh the page (on Windows, **Ctrl + Shift + R**). Browser-saved method edits and price overrides are device-specific.
-- **Unexpected GP/hour:** Review the method's assumptions and the quote source. Shop buy-back and purchase prices are not the same, and stock levels can affect real earnings.
-
-## Suggestions and issues
-
-Request corrections or additional RunicWorld-specific methods through the project's [GitHub Issues](https://github.com/davidja92/runicworld-profit-finder/issues).
-
-The website is free to use; it does not read the game client or require any in-game addons.
-
-## How action rates are calculated
-
-For standard glassblowing, ordinary fish cooking, and conventional unstrung bow fletching, the calculator uses cited OSRS Wiki reference speeds. The ranking shows the rate and source. These speeds are benchmarks, not guaranteed personal performance. Cooking estimates do not currently account for fish burns, and modern OSRS-only equipment or locations are not assumed available on RunicWorld. Other methods remain clearly labeled estimated until level-specific rates are sourced.
-
-## How reliable are production rates?
-
-In **Profit ranking**, read the rate notes for each activity. Wiki reference speeds are guide benchmarks for their specified setup, not guaranteed RunicWorld maxima. Provisional modeled speeds and unverified estimates are explicitly distinguished in the project rate audit. Cooking rates currently exclude burn probability, and gathering successes depend on levels, gear, and location. You can adjust **Actions/hour** in Edit methods for your own play style; no JSON editing is necessary.
-
-
-## How sell-price estimates work (v6.8)
-
-Under **Profit ranking**, choose **Sell price**. The default *Estimated average (bid / last)* takes the arithmetic midpoint between the highest live GE buy offer and last traded price when both exist. This is an indicative quote, **not a volume-weighted execution price**. When the last trade is unavailable it falls back to best buy. Other options include highest buy offer, last trade, and guide price. Actual proceeds for large quantities may be lower. The GE API used here lacks price-level order-book depths, so the site cannot calculate executable VWAP for an hourly batch.
-
-## How to read price and liquidity estimates
-
-On **Profit ranking**, click **Price details** beneath any method to inspect its hourly items, quantities, prices and source. The **Buyer liquidity** column compares the aggregate active buy quantity reported by RunicWorld with hourly output. It does **not** show the buy quantity at each price level or guarantee that you can fill all orders at the displayed quote. Low-depth methods show a warning. Unknown depth is not zero. Prices using the best-bid/last-trade midpoint are estimates, not actual execution VWAP. Shop buy-back and shop ingredient costs may vary as stock changes.
-
-
-## Sales volume and sorting (v7.1)
-
-In **Profit ranking**, use **Sort by** to order methods by estimated GP/hour, observed 1-hour trade quantity, reported 24-hour quantity, or observed 7-day quantity. The quantity for a multi-output recipe is the *smallest* observed quantity among its outputs. The 24-hour figures come from RunicWorld's `vol24h` market field.
-
-**Important:** RunicWorld's market endpoint exposes a *limited* list of recent trades. The website collects unique trades it encounters while open, locally in your browser, and retains up to seven days. Therefore, the 1-hour and 7-day numbers are **observed lower bounds**, not complete exchange totals. `≥` means at least that many units were seen; `0 ≥` does not prove no transactions. Gaps in browsing, API feed truncation, repeat trades with identical characteristics and browser storage removal can create missing history. The history is not shared between users. Existing trade history prior to v7.1 is not recoverable from 24h totals.
-
-Shop sales and NPC buy-back have no GE volume; their sale figures are unavailable. Sales-volume sorting is a demand signal, not a promise that all of an item's production will sell at a quoted price.
-
-## Shared sales-volume statistics
-The website can display centrally collected trades from the RunicWorld public GE market feed. The server-reported 24h volume is the API value. Hourly and weekly volume are **observed minimums** because the public endpoint only shares recent transactions. Values may be missing when the collector is delayed. No account or manual JSON upload is needed.
